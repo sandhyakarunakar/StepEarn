@@ -1,0 +1,85 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User documents:
+    // Users can read any user profile (for leaderboard & social),
+    // but only the owner can update safe profile fields.
+    // Financial fields (coinBalance, level, streakDays) can NOT be updated directly by client.
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) 
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['coinBalance']));
+      allow delete: if false;
+
+      match /unlockedBadges/{badgeId} {
+        allow read: if isAuthenticated();
+        allow write: if isOwner(userId);
+      }
+    }
+
+    // Step Records: clients write raw pedometer steps for their own uid
+    match /stepRecords/{userId}/days/{date} {
+      allow read: if isOwner(userId);
+      // Client cannot alter claimedMilestones directly; only raw steps/distance/calories
+      allow create, update: if isOwner(userId);
+    }
+
+    // Transactions: Ledger is strictly server-written via Cloud Functions / Admin SDK
+    // Client can only read their own ledger
+    match /transactions/{userId}/entries/{txId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Catalog of reward redemption options: publicly readable, admin only write
+    match /redeemOptions/{rewardId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Redemptions: read own redemptions; write only via Cloud Functions
+    match /redemptions/{redemptionId} {
+      allow read: if isAuthenticated() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Referrals: read where user is referrer or referee
+    match /referrals/{referralId} {
+      allow read: if isAuthenticated() && (
+        resource.data.referrerId == request.auth.uid || 
+        resource.data.referredUserId == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
+    // Precomputed leaderboards: readable by all authenticated users
+    match /leaderboard/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // Badges catalog: public read
+    match /badges/{badgeId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Economy Config
+    match /config/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

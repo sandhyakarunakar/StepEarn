@@ -1,0 +1,68 @@
+{
+  "collections": [
+    {
+      "name": "users",
+      "fields": [
+        {"name": "name", "type": "string"},
+        {"name": "handle", "type": "string"},
+        {"name": "avatarUrl", "type": "string"},
+        {"name": "bannerUrl", "type": "string"},
+        {"name": "level", "type": "number"},
+        {"name": "streakDays", "type": "number"},
+        {"name": "coinBalance", "type": "number"},
+        {"name": "followers", "type": "number"},
+        {"name": "following", "type": "number"},
+        {"name": "isPremium", "type": "boolean"},
+        {"name": "referralCode", "type": "string"},
+        {"name": "healthPermissionGranted", "type": "boolean"},
+        {"name": "createdAt", "type": "string"}
+      ]
+    },
+    {
+      "name": "redeemOptions",
+      "fields": [
+        {"name": "type", "type": "string"},
+        {"name": "title", "type": "string"},
+        {"name": "coinCost", "type": "number"},
+        {"name": "cashValue", "type": "string"},
+        {"name": "quantityAvailable", "type": "number"},
+        {"name": "isPremiumOnly", "type": "boolean"},
+        {"name": "distributedAmount", "type": "number"},
+        {"name": "totalPool", "type": "number"},
+        {"name": "beneficiaryCount", "type": "number"}
+      ]
+    },
+    {
+      "name": "redemptions",
+      "fields": [
+        {"name": "uid", "type": "string"},
+        {"name": "rewardId", "type": "string"},
+        {"name": "coinCost", "type": "number"},
+        {"name": "status", "type": "string"},
+        {"name": "payoutDetails", "type": "string"},
+        {"name": "requestedAt", "type": "string"},
+        {"name": "completedAt", "type": "string"}
+      ]
+    },
+    {
+      "name": "referrals",
+      "fields": [
+        {"name": "referrerId", "type": "string"},
+        {"name": "referredUserId", "type": "string"},
+        {"name": "referredName", "type": "string"},
+        {"name": "dateInvited", "type": "string"},
+        {"name": "consecutiveActiveDays", "type": "number"},
+        {"name": "rewardClaimed", "type": "boolean"}
+      ]
+    },
+    {
+      "name": "badges",
+      "fields": [
+        {"name": "name", "type": "string"},
+        {"name": "description", "type": "string"},
+        {"name": "iconUrl", "type": "string"},
+        {"name": "unlockCriteria", "type": "string"}
+      ]
+    }
+  ]
+}

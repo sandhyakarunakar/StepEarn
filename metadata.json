@@ -1,0 +1,6 @@
+{
+  "name": "StepEarn - Walk & Earn Rewards",
+  "description": "Walk and earn rewards, convert steps to coins, compete with friends, and redeem for real cash and gift cards with StepEarn.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
